@@ -22,7 +22,10 @@ public class ToroTraits {
 	public static final String TAG_HAS_TRAIT = MODID + "_hasTrait";
 	public static final String TAG_SUMMONED_MOB = MODID + "_summonedMob";
 
+	public static final String NBT_TRAIT_STORE = MODID + "_traitStore";
 	public static final String NBT_WORSHIP_COOLDOWN = MODID + "_worshipCooldown";
+	public static final String TAG_IS_HEALABLE = MODID + "_isHealable";
+	public static final String TAG_WORSHIPING = "nemesissystem_worshiping";
 
 	@Mod.Instance(MODID)
 	public static ToroTraits INSTANCE;

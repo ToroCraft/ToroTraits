@@ -26,4 +26,5 @@ public class Teleport {
 
 		BehaviorUtil.throwPearl(entity, target);
 	}
+
 }

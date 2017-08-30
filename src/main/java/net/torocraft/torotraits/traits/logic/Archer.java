@@ -18,18 +18,19 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.math.MathHelper;
 import net.torocraft.torotraits.traits.Trait;
 import net.torocraft.torotraits.traits.TraitHandler;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class Archer {
 
 	private static Potion[] TIPPED_ARROWS = { MobEffects.HUNGER, MobEffects.POISON, MobEffects.WEAKNESS, MobEffects.SLOWNESS };
 	private static String[] DROP_TYPES = { "harming", "poison", "weakness", "slowness" };
 
-	public static void onDrop(List<EntityItem> drops, EntityCreature nemesisEntity, int level) {
-		drops.add(TraitHandler.drop(nemesisEntity, new ItemStack(Items.ARROW, TraitHandler.rand.nextInt(64))));
-		if (level > 3) {
+	public static void onDrop(List<EntityItem> drops, EntityCreature nemesisEntity, Trait trait) {
+		drops.add(TraitUtil.drop(nemesisEntity, new ItemStack(Items.ARROW, TraitHandler.rand.nextInt(64))));
+		if (trait.level > 3) {
 			ItemStack arrows = new ItemStack(Items.TIPPED_ARROW, TraitHandler.rand.nextInt(64));
 			PotionUtils.addPotionToItemStack(arrows, PotionType.getPotionTypeForName(DROP_TYPES[TraitHandler.rand.nextInt(DROP_TYPES.length)]));
-			drops.add(TraitHandler.drop(nemesisEntity, arrows));
+			drops.add(TraitUtil.drop(nemesisEntity, arrows));
 		}
 	}
 

@@ -31,6 +31,22 @@ public class NbtSerializer {
 	}
 
 	/**
+	 * read data from the NBT to the object
+	 *
+	 * variant of read(NBTTagCompound c, Object o) where
+	 * the object is created by the read() method
+	 */
+	public static <T> T read(NBTTagCompound c, Class<T> clazz) {
+		try {
+			T o = clazz.newInstance();
+			fields(o).forEach((Field f) -> readField(c, o, f));
+			return o;
+		}catch (Exception e){
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	/**
 	 * Write date from the object to the NBT
 	 */
 	public static void write(NBTTagCompound c, Object o) {

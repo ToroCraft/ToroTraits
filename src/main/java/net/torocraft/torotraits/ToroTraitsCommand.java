@@ -9,15 +9,16 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.torocraft.torotraits.traits.Trait;
 import net.torocraft.torotraits.traits.Type;
 import net.torocraft.torotraits.util.SpawnUtil;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class ToroTraitsCommand extends CommandBase {
 
@@ -68,10 +69,9 @@ public class ToroTraitsCommand extends CommandBase {
 		EntityPlayer player = getCommandSenderAsPlayer(sender);
 		World world = player.world;
 
-		Entity entity = SpawnUtil.getEntityFromString(world, args[1]);
+		EntityCreature entity = SpawnUtil.getEntityFromString(world, args[1]);
 
-		// TODO move to an addTrait method
-		entity.addTag(ToroTraits.TAG_HAS_TRAIT);
+
 
 		if (entity == null) {
 			throw new WrongUsageException("commands.torotraits.spawn");
@@ -84,9 +84,9 @@ public class ToroTraitsCommand extends CommandBase {
 			throw new WrongUsageException("commands.torotraits.spawn");
 		}
 
-		// TODO add trait to entity, some how
-
-		SpawnUtil.spawnEntityLiving(world, (EntityCreature) entity, player.getPosition(), 0);
+		Trait trait = new Trait(traitType, 1);
+		TraitUtil.applyTrait(entity, trait);
+		SpawnUtil.spawnEntityLiving(world, entity, player.getPosition(), 0);
 	}
 
 	@Override

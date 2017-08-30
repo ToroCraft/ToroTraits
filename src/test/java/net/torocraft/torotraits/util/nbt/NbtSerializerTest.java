@@ -70,16 +70,15 @@ public class NbtSerializerTest {
 	@Before
 	public void before() {
 		t1 = new TestClass();
-		t2 = new TestClass();
 	}
 
 	private void readWrite() {
 		NBTTagCompound c = new NBTTagCompound();
 		NbtSerializer.write(c, t1);
-		NbtSerializer.read(c, t2);
+		t2 = NbtSerializer.read(c, TestClass.class);
 	}
 
-	private static class TestClass {
+	public static class TestClass {
 		@NbtField
 		boolean bool1;
 

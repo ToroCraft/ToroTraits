@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.torocraft.torotraits.ToroTraits;
 import net.torocraft.torotraits.network.MessageWorshipAnimation;
-import net.torocraft.torotraits.traits.TraitHandler;
 import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class Gluttony {
 
@@ -49,7 +49,7 @@ public class Gluttony {
 	}
 
 	private static List<EntityItem> getFoodWithinAABB(EntityLiving entity, int distance) {
-		return entity.world.getEntitiesWithinAABB(EntityItem.class, TraitHandler.nearByBox(entity.getPosition(), distance),
+		return entity.world.getEntitiesWithinAABB(EntityItem.class, TraitUtil.nearByBox(entity.getPosition(), distance),
 				Gluttony::isTasty);
 	}
 

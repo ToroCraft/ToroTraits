@@ -1,27 +1,34 @@
 package net.torocraft.torotraits.traits.logic;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.torocraft.torotraits.ToroTraits;
 import net.torocraft.torotraits.network.MessageHealAnimation;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class Heal {
+
 	public static void onUpdate(EntityLiving entity) {
 		World world = entity.world;
-		Random rand = entity.getRNG();
-
 		if (world.getTotalWorldTime() % 40 != 0) {
 			return;
 		}
+		findHealableEntities(entity.world, entity.getPosition(), 40).forEach(Heal::possiblyHealCreature);
+	}
 
-		List<EntityCreature> guards = new ArrayList<>(); //TODO update to near by entities and self NemesisUtil.findNemesisBodyGuards(entity.world, nemesis.getId(), entity.getPosition());
-		guards.forEach(Heal::possiblyHealCreature);
+	private static List<EntityCreature> findHealableEntities(World world, BlockPos pos, int range) {
+		return world.getEntitiesWithinAABB(EntityCreature.class, TraitUtil.nearByBox(pos, range), Heal::entityIsHealable);
+	}
+
+	private static boolean entityIsHealable(EntityCreature entity) {
+		return !entity.isDead && entity.getHealth() > 0 &&
+				(entity instanceof EntityMob || entity.getTags().contains(ToroTraits.TAG_IS_HEALABLE));
 	}
 
 	private static void possiblyHealCreature(EntityCreature entity) {

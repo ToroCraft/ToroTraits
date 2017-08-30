@@ -33,14 +33,13 @@ public class EventHandlers {
 	}
 
 	@SubscribeEvent
-	public static void dropBook(LivingDropsEvent event) {
+	public static void onDrop(LivingDropsEvent event) {
 		if (!(event.getEntity() instanceof EntityMob)) {
 			return;
 		}
 
 		if (event.getEntity().getTags().contains(ToroTraits.TAG_HAS_TRAIT)) {
-			// TODO wire in trait handler
-			return;
+			TraitHandler.onDrop(event);
 		}
 
 	}
@@ -56,35 +55,4 @@ public class EventHandlers {
 		}
 	}
 
-	/* TODO refactor this into TraitHandler.onHurt(event);
-	@SubscribeEvent
-	public static void onTeleportEntityHarm(LivingHurtEvent event) {
-		if (!(event.getEntityLiving() instanceof EntityLiving) || !event.getEntityLiving().getTags().contains(ToroTraits.TAG_HAS_TRAIT)) {
-			return;
-		}
-
-		EntityLiving entity = (EntityLiving) event.getEntityLiving();
-		NemesisEntry nemesis = NemesisUtil.loadNemesisFromEntity(entity);
-		if (nemesis == null) {
-			return;
-		}
-
-		if (!nemesis.hasTrait(Type.TELEPORT)) {
-			return;
-		}
-
-		World world = entity.getEntityWorld();
-		if (world.rand.nextInt(2) != 0) {
-			return;
-		}
-
-		List<EntityCreature> guards = NemesisUtil.findNemesisBodyGuards(world, nemesis.getId(), entity.getPosition());
-		if (guards.size() < 1) {
-			return;
-		}
-		EntityCreature teleportTarget = guards.get(world.rand.nextInt(guards.size()));
-
-		BehaviorUtil.throwPearl(entity, teleportTarget);
-	}
-	*/
 }

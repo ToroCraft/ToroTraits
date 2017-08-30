@@ -12,14 +12,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.torocraft.torotraits.ToroTraits;
+import net.torocraft.torotraits.traits.Trait;
 
 public class Summon {
 
-	public static void onUpdate(EntityLiving entity) {
+	public static void onUpdate(EntityLiving entity, Trait trait) {
 		World world = entity.world;
 		Random rand = entity.getRNG();
 
-		int level = 1; //TODO get from entity
+		int level = trait.level;
 
 		EntityLivingBase target = entity.getAttackTarget();
 

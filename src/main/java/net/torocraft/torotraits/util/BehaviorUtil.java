@@ -11,14 +11,12 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.item.EntityEnderPearl;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.torocraft.torotraits.ToroTraits;
-import net.torocraft.torotraits.traits.TraitHandler;
 
 public class BehaviorUtil {
 
@@ -47,7 +45,10 @@ public class BehaviorUtil {
 
 	public static boolean stealAndWorshipItem(EntityLiving entity, List<EntityItem> desiredItems, int level) {
 		if (desiredItems.size() > 0) {
-			entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, desiredItems.get(0).getItem());
+
+			// TODO store the item to NBT, move this call to start worship since the replacement is called in stopWorship
+			//entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, desiredItems.get(0).getItem());
+
 			BehaviorUtil.startWorshiping(entity,  3 + (2 * level));
 			for (EntityItem item : desiredItems) {
 				entity.world.removeEntity(item);
@@ -57,9 +58,15 @@ public class BehaviorUtil {
 		return false;
 	}
 
+	private static void startWorshiping(EntityLiving entity, int count) {
+		entity.getTags().add(ToroTraits.TAG_WORSHIPING);
+		entity.getEntityData().setTag(ToroTraits.NBT_WORSHIP_COOLDOWN, new NBTTagInt(count));
+		cancelAllAITasks(entity);
+	}
+
 	public static void stopWorshiping(EntityLiving entity) {
 		entity.getEntityData().removeTag(ToroTraits.NBT_WORSHIP_COOLDOWN);
-		entity.getTags().remove(TraitHandler.TAG_WORSHIPING);
+		entity.getTags().remove(ToroTraits.TAG_WORSHIPING);
 
 		// TODO the item needs to be cached on the entity then restored here
 		//entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, nemesis.getHandInventory().get(0));
@@ -68,13 +75,7 @@ public class BehaviorUtil {
 	}
 
 	public static boolean isWorshiping(EntityLiving entity) {
-		return entity.getTags().contains(TraitHandler.TAG_WORSHIPING) && entity.getEntityData().hasKey(ToroTraits.NBT_WORSHIP_COOLDOWN);
-	}
-
-	private static void startWorshiping(EntityLiving entity, int count) {
-		entity.getTags().add(TraitHandler.TAG_WORSHIPING);
-		entity.getEntityData().setTag(ToroTraits.NBT_WORSHIP_COOLDOWN, new NBTTagInt(count));
-		cancelAllAITasks(entity);
+		return entity.getTags().contains(ToroTraits.TAG_WORSHIPING) && entity.getEntityData().hasKey(ToroTraits.NBT_WORSHIP_COOLDOWN);
 	}
 
 	public static void moveToItem(EntityLiving entity, EntityItem item) {

@@ -8,6 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.torocraft.torotraits.traits.logic.Allergy;
 import net.torocraft.torotraits.traits.logic.Archer;
@@ -23,24 +24,26 @@ import net.torocraft.torotraits.traits.logic.Pyrophobia;
 import net.torocraft.torotraits.traits.logic.Reflection;
 import net.torocraft.torotraits.traits.logic.Summon;
 import net.torocraft.torotraits.traits.logic.Teleport;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class TraitHandler {
 
-	public static final String TAG_WORSHIPING = "nemesissystem_worshiping";
-
 	public static final Random rand = new Random();
 
-	public static void onUpdate(EntityCreature nemesisEntity) {
-		Greedy.decrementCooldown(nemesisEntity);
+	public static void onUpdate(EntityCreature entity) {
+		Greedy.decrementCooldown(entity);
 
-		// TODO get traits from entity
-		List<Trait> traits = new ArrayList<>();
+		TraitStore store = TraitUtil.read(entity);
 
-		for (Trait trait : traits) {
+		if (store.traits == null) {
+			return;
+		}
+
+		for (Trait trait : store.traits) {
 			// TODO secondary traits should be used less frequently
 
 			// TODO randomize attack timing
-			onUpdate(nemesisEntity, trait);
+			onUpdate(entity, trait);
 		}
 	}
 
@@ -59,7 +62,7 @@ public class TraitHandler {
 			Archer.onUpdate(entity, trait.level);
 			return;
 		case SUMMON:
-			Summon.onUpdate(entity);
+			Summon.onUpdate(entity, trait);
 			return;
 		case REFLECT:
 			return;
@@ -87,60 +90,55 @@ public class TraitHandler {
 		case HYDROPHOBIA:
 			Hydrophobia.onUpdate(entity, trait.level);
 			return;
-		case GOLD_ALLERGY:
-			return;
-		case WOOD_ALLERGY:
-			return;
-		case STONE_ALLERGY:
-			return;
 		}
 	}
 
 	public static void onHurt(LivingHurtEvent event) {
-		EntityCreature nemesisEntity = (EntityCreature) event.getEntity();
+		EntityCreature entity = (EntityCreature) event.getEntity();
 
-		// TODO get traits from entity
-		List<Trait> traits = new ArrayList<>();
+		TraitStore store = TraitUtil.read(entity);
 
-		for (Trait trait : traits) {
-			switch (trait.type) {
-			case DOUBLE_MELEE:
-				break;
-			case ARCHER:
-				break;
-			case SUMMON:
-				break;
-			case REFLECT:
-				Reflection.onHurt(nemesisEntity, event.getSource(), event.getAmount());
-				break;
-			case FIREBALL:
-				break;
-			case POTION:
-				break;
-			case TELEPORT:
-				break;
-			case HEAL:
-				break;
-			case GOLD_ALLERGY:
-			case STONE_ALLERGY:
-			case WOOD_ALLERGY:
-				Allergy.onHurt(event, trait.level);
-			}
+		if (store.traits == null) {
+			return;
+		}
+
+		for (Trait trait : store.traits) {
+			onHurt(event, entity, trait);
 		}
 	}
 
-	public static AxisAlignedBB nearByBox(BlockPos position, int radius) {
-		return new AxisAlignedBB(position).grow(radius, radius, radius);
-	}
-
-	private static EntityItem damageAndDrop(EntityCreature entity, ItemStack stack) {
-		if (stack.isItemStackDamageable()) {
-			stack.setItemDamage(stack.getMaxDamage() - entity.getRNG().nextInt(1 + entity.getRNG().nextInt(Math.max(stack.getMaxDamage() - 3, 1))));
+	private static void onHurt(LivingHurtEvent event, EntityCreature entity, Trait trait) {
+		switch (trait.type) {
+		case REFLECT:
+			Reflection.onHurt(entity, event.getSource(), event.getAmount(), trait);
+			break;
+		case GOLD_ALLERGY:
+		case STONE_ALLERGY:
+		case WOOD_ALLERGY:
+			Allergy.onHurt(event, trait);
 		}
-		return drop(entity, stack);
 	}
 
-	public static EntityItem drop(EntityCreature entity, ItemStack stack) {
-		return new EntityItem(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
+	public static void onDrop(LivingDropsEvent event) {
+		EntityCreature entity = (EntityCreature) event.getEntity();
+
+		TraitStore store = TraitUtil.read(entity);
+
+		if (store.traits == null) {
+			return;
+		}
+
+		for (Trait trait : store.traits) {
+			onDrop(event, entity, trait);
+		}
 	}
+
+	private static void onDrop(LivingDropsEvent event, EntityCreature entity, Trait trait) {
+		switch (trait.type) {
+		case ARCHER:
+			Archer.onDrop(event.getDrops(), entity, trait);
+			break;
+		}
+	}
+
 }

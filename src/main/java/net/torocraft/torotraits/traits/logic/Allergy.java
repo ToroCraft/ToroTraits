@@ -10,13 +10,16 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.torocraft.torotraits.traits.Trait;
+import net.torocraft.torotraits.traits.Type;
 
 public class Allergy {
 	private static final int ONE_SECOND = 20;
 
-	public static void onHurt(LivingHurtEvent event, int level) {
+	public static void onHurt(LivingHurtEvent event, Trait trait) {
 		EntityLiving entity = (EntityLiving) event.getEntity();
 		EntityLivingBase attacker = getAttacker(event);
+		int level = trait.level;
 
 		if (attacker == null) {
 			return;
@@ -34,7 +37,7 @@ public class Allergy {
 			return;
 		}
 
-		if (!isAllergicToMaterial(material)) {
+		if (!isAllergicToMaterial(material, trait)) {
 			return;
 		}
 
@@ -76,26 +79,20 @@ public class Allergy {
 		return null;
 	}
 
-	private static boolean isAllergicToMaterial(String material) {
-		return woodAllergyApplies(material) || goldAllergyApplies(material) || stoneAllergyApplies(material);
+	private static boolean isAllergicToMaterial(String material, Trait trait) {
+		return woodAllergyApplies(material, trait) || goldAllergyApplies(material, trait) || stoneAllergyApplies(material, trait);
 	}
 
-	private static boolean stoneAllergyApplies(String material) {
-		// TODO add has trait check from entity
-		return false;
-		// return nemesis.hasTrait(Type.STONE_ALLERGY) && material.equals("STONE");
+	private static boolean stoneAllergyApplies(String material, Trait trait) {
+		return Type.STONE_ALLERGY.equals(trait.type) && material.equals("STONE");
 	}
 
-	private static boolean goldAllergyApplies(String material) {
-		// TODO add has trait check from entity
-		return false;
-		// return nemesis.hasTrait(Type.GOLD_ALLERGY) && material.equals("GOLD");
+	private static boolean goldAllergyApplies(String material, Trait trait) {
+		return Type.GOLD_ALLERGY.equals(trait.type) && material.equals("GOLD");
 	}
 
-	private static boolean woodAllergyApplies(String material) {
-		// TODO add has trait check from entity
-		return false;
-		// return nemesis.hasTrait(Type.WOOD_ALLERGY) && material.equals("WOOD");
+	private static boolean woodAllergyApplies(String material, Trait trait) {
+		return Type.WOOD_ALLERGY.equals(trait.type) && material.equals("WOOD");
 	}
 
 }

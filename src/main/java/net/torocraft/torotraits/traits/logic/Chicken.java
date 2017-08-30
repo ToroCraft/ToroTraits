@@ -3,8 +3,8 @@ package net.torocraft.torotraits.traits.logic;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.passive.EntityChicken;
-import net.torocraft.torotraits.traits.TraitHandler;
 import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class Chicken {
 
@@ -16,7 +16,7 @@ public class Chicken {
 	}
 
 	private static boolean chickensNearby(EntityLiving entity) {
-		return entity.world.getEntitiesWithinAABB(EntityChicken.class, TraitHandler.nearByBox(entity.getPosition(), 5)).size() > 0;
+		return entity.world.getEntitiesWithinAABB(EntityChicken.class, TraitUtil.nearByBox(entity.getPosition(), 5)).size() > 0;
 	}
 
 }

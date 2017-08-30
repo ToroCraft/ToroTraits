@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.torocraft.torotraits.traits.TraitHandler;
 import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.util.TraitUtil;
 
 public class Inferno {
 
@@ -44,7 +45,7 @@ public class Inferno {
 	}
 
 	private static List<EntityPlayer> getVisiblePlayers(EntityCreature entity, World world, int distance) {
-		return world.getEntitiesWithinAABB(EntityPlayer.class, TraitHandler.nearByBox(entity.getPosition(), distance),
+		return world.getEntitiesWithinAABB(EntityPlayer.class, TraitUtil.nearByBox(entity.getPosition(), distance),
 				(EntityPlayer p) -> BehaviorUtil.canSee(entity, p)
 		);
 	}
