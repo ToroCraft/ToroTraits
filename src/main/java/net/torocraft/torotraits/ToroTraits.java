@@ -27,8 +27,6 @@ public class ToroTraits {
 	@Mod.Instance(MODID)
 	public static ToroTraits INSTANCE;
 
-	public static MinecraftServer SERVER;
-
 	public static SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	@SidedProxy(clientSide = "net.torocraft.torotraits.proxy.ClientProxy", serverSide = "net.torocraft.torotraits.proxy.ServerProxy")
@@ -51,7 +49,6 @@ public class ToroTraits {
 
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent e) {
-		SERVER = e.getServer();
 		e.registerServerCommand(new ToroTraitsCommand());
 	}
 
