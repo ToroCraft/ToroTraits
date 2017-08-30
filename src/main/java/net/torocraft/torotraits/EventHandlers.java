@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.torocraft.torotraits.traits.TraitHandler;
 
-@Mod.EventBusSubscriber(value = { Side.SERVER })
+@Mod.EventBusSubscriber(modid = ToroTraits.MODID)
 public class EventHandlers {
 
 	@SubscribeEvent
