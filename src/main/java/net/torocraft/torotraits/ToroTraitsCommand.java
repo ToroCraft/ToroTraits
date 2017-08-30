@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.torocraft.torotraits.traits.Trait;
 import net.torocraft.torotraits.traits.Type;
@@ -62,7 +63,7 @@ public class ToroTraitsCommand extends CommandBase {
 			return;
 		}
 
-		if (args.length != 3) {
+		if (args.length != 4) {
 			throw new WrongUsageException("commands.torotraits.spawn");
 		}
 
@@ -71,22 +72,28 @@ public class ToroTraitsCommand extends CommandBase {
 
 		EntityCreature entity = SpawnUtil.getEntityFromString(world, args[1]);
 
-
-
 		if (entity == null) {
 			throw new WrongUsageException("commands.torotraits.spawn");
 		}
 
-		Type traitType = null;
+		Type traitType;
 		try {
 			traitType = Type.valueOf(args[2]);
 		}catch (Exception e) {
 			throw new WrongUsageException("commands.torotraits.spawn");
 		}
 
-		Trait trait = new Trait(traitType, 1);
+		Trait trait = new Trait(traitType, i(args[3]));
 		TraitUtil.applyTrait(entity, trait);
 		SpawnUtil.spawnEntityLiving(world, entity, player.getPosition(), 0);
+	}
+
+	private int i(String s) {
+		try {
+			return MathHelper.clamp(Integer.valueOf(s, 10), 1, 10);
+		}catch (Exception e) {
+			return 1;
+		}
 	}
 
 	@Override
@@ -111,6 +118,14 @@ public class ToroTraitsCommand extends CommandBase {
 
 		if (args.length == 3) {
 			return getListOfStringsMatchingLastWord(args, Arrays.asList(Type.values()));
+		}
+
+		if (args.length == 4) {
+			String[] levels = new String[10];
+			for (int i = 0; i < 10; i++) {
+				levels[i] = Integer.toString(i, 10);
+			}
+			return getListOfStringsMatchingLastWord(args, levels);
 		}
 
 		return Collections.emptyList();
