@@ -1,0 +1,16 @@
+[
+{
+  "modid": "torotraits",
+  "name": "ToroTraits",
+  "description": "Shared Mod Library to add new Attacks, Strengths, and Weakness to mobs.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ToroCraft"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
