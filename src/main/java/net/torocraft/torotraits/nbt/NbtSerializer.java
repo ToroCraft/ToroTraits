@@ -1,4 +1,4 @@
-package net.torocraft.torotraits.util.nbt;
+package net.torocraft.torotraits.nbt;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package net.torocraft.torotraits.util;
+package net.torocraft.torotraits.api;
 
 import java.util.List;
 import net.minecraft.entity.Entity;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.torocraft.torotraits.ToroTraits;
 
-public class BehaviorUtil {
+public class BehaviorApi {
 
 	public static void setFollowSpeed(EntityCreature bodyGuard, double followSpeed) {
 		EntityAIMoveTowardsRestriction ai = null;
@@ -49,7 +49,7 @@ public class BehaviorUtil {
 			// TODO store the item to NBT, move this call to start worship since the replacement is called in stopWorship
 			//entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, desiredItems.get(0).getItem());
 
-			BehaviorUtil.startWorshiping(entity,  3 + (2 * level));
+			BehaviorApi.startWorshiping(entity,  3 + (2 * level));
 			for (EntityItem item : desiredItems) {
 				entity.world.removeEntity(item);
 			}

@@ -1,6 +1,5 @@
 package net.torocraft.torotraits;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -18,6 +17,16 @@ public class ToroTraits {
 	public static final String MODID = "skillutil";
 	public static final String VERSION = "1.12.1-1";
 	public static final String MODNAME = "ToroTraits";
+
+	/**
+	 * incremented every deploy
+	 */
+	public static final int API_VERSION = 1;
+
+	/**
+	 * incremented when public methods in one of the API classes are changed
+	 */
+	public static final int COMPAT_VERSION = 1;
 
 	public static final String TAG_HAS_TRAIT = MODID + "_hasTrait";
 	public static final String TAG_SUMMONED_MOB = MODID + "_summonedMob";

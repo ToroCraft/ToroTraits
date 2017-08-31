@@ -1,4 +1,4 @@
-package net.torocraft.torotraits.util;
+package net.torocraft.torotraits.api;
 
 import java.util.Random;
 import net.minecraft.entity.Entity;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class SpawnUtil {
+public class SpawnApi {
 
 	public static void spawn(World world, String mob, BlockPos pos, int spawnRadius) {
 		spawnEntityLiving(world, getEntityFromString(world, mob), pos, spawnRadius);

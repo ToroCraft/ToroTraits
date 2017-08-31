@@ -1,4 +1,4 @@
-package net.torocraft.torotraits.util;
+package net.torocraft.torotraits.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +13,9 @@ import net.torocraft.torotraits.ToroTraits;
 import net.torocraft.torotraits.traits.Trait;
 import net.torocraft.torotraits.traits.TraitStore;
 import net.torocraft.torotraits.traits.Type;
-import net.torocraft.torotraits.util.nbt.NbtSerializer;
+import net.torocraft.torotraits.nbt.NbtSerializer;
 
-public class TraitUtil {
+public class TraitApi {
 
 	public static void applyTrait(EntityCreature entity, Trait trait) {
 		entity.addTag(ToroTraits.TAG_HAS_TRAIT);

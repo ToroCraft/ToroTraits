@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.torocraft.torotraits.ToroTraits;
 import net.torocraft.torotraits.network.MessageHealAnimation;
-import net.torocraft.torotraits.util.TraitUtil;
+import net.torocraft.torotraits.api.TraitApi;
 
 public class Heal {
 
@@ -23,7 +23,7 @@ public class Heal {
 	}
 
 	private static List<EntityCreature> findHealableEntities(World world, BlockPos pos, int range) {
-		return world.getEntitiesWithinAABB(EntityCreature.class, TraitUtil.nearByBox(pos, range), Heal::entityIsHealable);
+		return world.getEntitiesWithinAABB(EntityCreature.class, TraitApi.nearByBox(pos, range), Heal::entityIsHealable);
 	}
 
 	private static boolean entityIsHealable(EntityCreature entity) {

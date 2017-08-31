@@ -1,13 +1,7 @@
 package net.torocraft.torotraits.traits;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.torocraft.torotraits.traits.logic.Allergy;
@@ -24,7 +18,7 @@ import net.torocraft.torotraits.traits.logic.Pyrophobia;
 import net.torocraft.torotraits.traits.logic.Reflection;
 import net.torocraft.torotraits.traits.logic.Summon;
 import net.torocraft.torotraits.traits.logic.Teleport;
-import net.torocraft.torotraits.util.TraitUtil;
+import net.torocraft.torotraits.api.TraitApi;
 
 public class TraitHandler {
 
@@ -33,7 +27,7 @@ public class TraitHandler {
 	public static void onUpdate(EntityCreature entity) {
 		Greedy.decrementCooldown(entity);
 
-		TraitStore store = TraitUtil.read(entity);
+		TraitStore store = TraitApi.read(entity);
 
 		if (store.traits == null) {
 			return;
@@ -96,7 +90,7 @@ public class TraitHandler {
 	public static void onHurt(LivingHurtEvent event) {
 		EntityCreature entity = (EntityCreature) event.getEntity();
 
-		TraitStore store = TraitUtil.read(entity);
+		TraitStore store = TraitApi.read(entity);
 
 		if (store.traits == null) {
 			return;
@@ -122,7 +116,7 @@ public class TraitHandler {
 	public static void onDrop(LivingDropsEvent event) {
 		EntityCreature entity = (EntityCreature) event.getEntity();
 
-		TraitStore store = TraitUtil.read(entity);
+		TraitStore store = TraitApi.read(entity);
 
 		if (store.traits == null) {
 			return;

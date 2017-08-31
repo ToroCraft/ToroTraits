@@ -8,21 +8,21 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.torocraft.torotraits.ToroTraits;
 import net.torocraft.torotraits.network.MessageWorshipAnimation;
-import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.api.BehaviorApi;
 
 public class Greedy {
 
 	public static void onUpdate(EntityLiving entity, int level) {
-		if (BehaviorUtil.isWorshiping(entity)) {
+		if (BehaviorApi.isWorshiping(entity)) {
 			if (entity.getEntityData().getInteger(ToroTraits.NBT_WORSHIP_COOLDOWN) >= 0) {
 				TargetPoint point = new TargetPoint(entity.dimension, entity.posX, entity.posY, entity.posZ, 100);
 				ToroTraits.NETWORK.sendToAllAround(new MessageWorshipAnimation(entity.getEntityId()), point);
 				return;
 			}
-			BehaviorUtil.stopWorshiping(entity);
+			BehaviorApi.stopWorshiping(entity);
 		}
 
-		if (BehaviorUtil.stealAndWorshipItem(entity, getShiniesWithinAABB(entity, 1.0D, 0.0D, 1.0D), level)) {
+		if (BehaviorApi.stealAndWorshipItem(entity, getShiniesWithinAABB(entity, 1.0D, 0.0D, 1.0D), level)) {
 			return;
 		}
 
@@ -30,7 +30,7 @@ public class Greedy {
 		EntityItem shiny = getVisibleItem(entity, getShiniesWithinAABB(entity, distractDistance, distractDistance, distractDistance));
 		if (shiny != null) {
 			entity.setAttackTarget(null);
-			BehaviorUtil.moveToItem(entity, shiny);
+			BehaviorApi.moveToItem(entity, shiny);
 		}
 
 	}

@@ -7,20 +7,20 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.api.BehaviorApi;
 
 public class Pyrophobia {
 	public static void onUpdate(EntityLiving entity, int level) {
 		if (entity.isBurning()) {
 			entity.setAttackTarget(null);
-			BehaviorUtil.moveToBlock(entity, panicTo(entity, level), 2.0D);
+			BehaviorApi.moveToBlock(entity, panicTo(entity, level), 2.0D);
 		}
 	}
 
 	private static BlockPos panicTo(EntityLiving entity, int level) {
 		BlockPos targetPos = findNearbyWater(entity.world, entity, 5, 4);
 		if (targetPos == null) {
-			targetPos = BehaviorUtil.findPanicDestination((EntityCreature)entity, level);
+			targetPos = BehaviorApi.findPanicDestination((EntityCreature)entity, level);
 		}
 		return targetPos;
 	}

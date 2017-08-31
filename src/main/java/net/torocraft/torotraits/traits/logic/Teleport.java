@@ -3,7 +3,7 @@ package net.torocraft.torotraits.traits.logic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-import net.torocraft.torotraits.util.BehaviorUtil;
+import net.torocraft.torotraits.api.BehaviorApi;
 
 public class Teleport {
 
@@ -24,7 +24,7 @@ public class Teleport {
 			return;
 		}
 
-		BehaviorUtil.throwPearl(entity, target);
+		BehaviorApi.throwPearl(entity, target);
 	}
 
 }

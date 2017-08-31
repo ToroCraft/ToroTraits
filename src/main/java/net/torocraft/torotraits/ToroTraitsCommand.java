@@ -18,8 +18,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.torocraft.torotraits.traits.Trait;
 import net.torocraft.torotraits.traits.Type;
-import net.torocraft.torotraits.util.SpawnUtil;
-import net.torocraft.torotraits.util.TraitUtil;
+import net.torocraft.torotraits.api.SpawnApi;
+import net.torocraft.torotraits.api.TraitApi;
 
 public class ToroTraitsCommand extends CommandBase {
 
@@ -70,7 +70,7 @@ public class ToroTraitsCommand extends CommandBase {
 		EntityPlayer player = getCommandSenderAsPlayer(sender);
 		World world = player.world;
 
-		EntityCreature entity = SpawnUtil.getEntityFromString(world, args[1]);
+		EntityCreature entity = SpawnApi.getEntityFromString(world, args[1]);
 
 		if (entity == null) {
 			throw new WrongUsageException("commands.torotraits.spawn");
@@ -84,8 +84,8 @@ public class ToroTraitsCommand extends CommandBase {
 		}
 
 		Trait trait = new Trait(traitType, i(args[3]));
-		TraitUtil.applyTrait(entity, trait);
-		SpawnUtil.spawnEntityLiving(world, entity, player.getPosition(), 0);
+		TraitApi.applyTrait(entity, trait);
+		SpawnApi.spawnEntityLiving(world, entity, player.getPosition(), 0);
 	}
 
 	private int i(String s) {

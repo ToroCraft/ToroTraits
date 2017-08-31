@@ -1,4 +1,4 @@
-package net.torocraft.torotraits.util.nbt;
+package net.torocraft.torotraits.nbt;
 
 import java.util.HashSet;
 import java.util.Set;
