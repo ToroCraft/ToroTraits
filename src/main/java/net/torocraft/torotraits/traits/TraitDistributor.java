@@ -1,9 +1,11 @@
 package net.torocraft.torotraits.traits;
 
-import java.util.Random;
+import java.util.function.Function;
 import net.minecraft.entity.EntityCreature;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.torocraft.torotraits.api.TraitApi;
 import net.torocraft.torotraits.traits.logic.Allergy;
 import net.torocraft.torotraits.traits.logic.Archer;
 import net.torocraft.torotraits.traits.logic.Chicken;
@@ -18,30 +20,28 @@ import net.torocraft.torotraits.traits.logic.Pyrophobia;
 import net.torocraft.torotraits.traits.logic.Reflection;
 import net.torocraft.torotraits.traits.logic.Summon;
 import net.torocraft.torotraits.traits.logic.Teleport;
-import net.torocraft.torotraits.api.TraitApi;
 
-public class TraitHandler {
 
-	public static final Random rand = new Random();
+// TODO secondary traits should be used less frequently
+// TODO randomize attack timing
 
-	public static void onUpdate(EntityCreature entity) {
-		Greedy.decrementCooldown(entity);
+public class TraitDistributor {
 
+	public interface TraitProcess {
+		void process(EntityEvent event, EntityCreature entity, Trait trait);
+	}
+
+	public static void distribute(EntityEvent event, EntityCreature entity, TraitProcess func) {
 		TraitStore store = TraitApi.read(entity);
-
 		if (store.traits == null) {
 			return;
 		}
-
 		for (Trait trait : store.traits) {
-			// TODO secondary traits should be used less frequently
-
-			// TODO randomize attack timing
-			onUpdate(entity, trait);
+			func.process(event, entity, trait);
 		}
 	}
 
-	private static void onUpdate(EntityCreature entity, Trait trait) {
+	public static void onUpdate(EntityEvent event, EntityCreature entity, Trait trait) {
 		switch (trait.type) {
 		case DOUBLE_MELEE:
 			// TODO make the nemesis hit twice when attacking
@@ -87,21 +87,8 @@ public class TraitHandler {
 		}
 	}
 
-	public static void onHurt(LivingHurtEvent event) {
-		EntityCreature entity = (EntityCreature) event.getEntity();
-
-		TraitStore store = TraitApi.read(entity);
-
-		if (store.traits == null) {
-			return;
-		}
-
-		for (Trait trait : store.traits) {
-			onHurt(event, entity, trait);
-		}
-	}
-
-	private static void onHurt(LivingHurtEvent event, EntityCreature entity, Trait trait) {
+	public static void onHurt(EntityEvent eventIn, EntityCreature entity, Trait trait) {
+		LivingHurtEvent event = (LivingHurtEvent) eventIn;
 		switch (trait.type) {
 		case REFLECT:
 			Reflection.onHurt(entity, event.getSource(), event.getAmount(), trait);
@@ -113,26 +100,23 @@ public class TraitHandler {
 		}
 	}
 
-	public static void onDrop(LivingDropsEvent event) {
-		EntityCreature entity = (EntityCreature) event.getEntity();
 
-		TraitStore store = TraitApi.read(entity);
-
-		if (store.traits == null) {
-			return;
-		}
-
-		for (Trait trait : store.traits) {
-			onDrop(event, entity, trait);
+	public static void onAttack(EntityEvent eventIn, EntityCreature entity, Trait trait) {
+		LivingHurtEvent event = (LivingHurtEvent) eventIn;
+		switch (trait.type) {
+		case DOUBLE_MELEE:
+			// TODO wire this up
+			//Reflection.onHurt(entity, event.getSource(), event.getAmount(), trait);
+			break;
 		}
 	}
 
-	private static void onDrop(LivingDropsEvent event, EntityCreature entity, Trait trait) {
+	public static void onDrop(EntityEvent eventIn, EntityCreature entity, Trait trait) {
+		LivingDropsEvent event = (LivingDropsEvent) eventIn;
 		switch (trait.type) {
 		case ARCHER:
 			Archer.onDrop(event.getDrops(), entity, trait);
 			break;
 		}
 	}
-
 }
