@@ -1,6 +1,7 @@
 package net.torocraft.torotraits.traits.logic;
 
 import java.util.List;
+import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,9 +17,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.math.MathHelper;
-import net.torocraft.torotraits.traits.Trait;
-import net.torocraft.torotraits.traits.TraitHandler;
 import net.torocraft.torotraits.api.TraitApi;
+import net.torocraft.torotraits.traits.Trait;
 
 public class Archer {
 
@@ -26,10 +26,10 @@ public class Archer {
 	private static String[] DROP_TYPES = { "harming", "poison", "weakness", "slowness" };
 
 	public static void onDrop(List<EntityItem> drops, EntityCreature nemesisEntity, Trait trait) {
-		drops.add(TraitApi.drop(nemesisEntity, new ItemStack(Items.ARROW, TraitHandler.rand.nextInt(64))));
+		drops.add(TraitApi.drop(nemesisEntity, new ItemStack(Items.ARROW, nemesisEntity.getRNG().nextInt(64))));
 		if (trait.level > 3) {
-			ItemStack arrows = new ItemStack(Items.TIPPED_ARROW, TraitHandler.rand.nextInt(64));
-			PotionUtils.addPotionToItemStack(arrows, PotionType.getPotionTypeForName(DROP_TYPES[TraitHandler.rand.nextInt(DROP_TYPES.length)]));
+			ItemStack arrows = new ItemStack(Items.TIPPED_ARROW, nemesisEntity.getRNG().nextInt(64));
+			PotionUtils.addPotionToItemStack(arrows, PotionType.getPotionTypeForName(DROP_TYPES[nemesisEntity.getRNG().nextInt(DROP_TYPES.length)]));
 			drops.add(TraitApi.drop(nemesisEntity, arrows));
 		}
 	}
@@ -70,22 +70,22 @@ public class Archer {
 		EntityTippedArrow arrow = new EntityTippedArrow(entity.getEntityWorld(), entity);
 		arrow.setEnchantmentEffectsFromEntity(entity, (float) 1 / (float) level);
 		if (level > 3) {
-			setPoisonArrow(arrow, level);
+			setPoisonArrow(entity.getRNG(), arrow, level);
 		}
 		return arrow;
 	}
 
-	private static void setPoisonArrow(EntityArrow entityarrow, int level) {
+	private static void setPoisonArrow(Random rand, EntityArrow entityarrow, int level) {
 		if (!(entityarrow instanceof EntityTippedArrow)) {
 			return;
 		}
 
 		int chance = MathHelper.clamp(6 - (level - 3), 1, 5);
 
-		if (TraitHandler.rand.nextInt(chance) != 0) {
+		if (rand.nextInt(chance) != 0) {
 			return;
 		}
 
-		((EntityTippedArrow) entityarrow).addEffect(new PotionEffect(TIPPED_ARROWS[TraitHandler.rand.nextInt(TIPPED_ARROWS.length)], 400 * level));
+		((EntityTippedArrow) entityarrow).addEffect(new PotionEffect(TIPPED_ARROWS[rand.nextInt(TIPPED_ARROWS.length)], 400 * level));
 	}
 }

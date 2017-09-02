@@ -1,9 +1,11 @@
 package net.torocraft.torotraits.api;
 
 import java.util.Random;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -12,7 +14,7 @@ import net.minecraft.world.World;
 public class SpawnApi {
 
 	public static void spawn(World world, String mob, BlockPos pos, int spawnRadius) {
-		spawnEntityLiving(world, getEntityFromString(world, mob), pos, spawnRadius);
+		spawnEntityCreature(world, getEntityFromString(world, mob), pos, spawnRadius);
 	}
 
 	public static EntityCreature getEntityFromString(World world, String entityID) {
@@ -32,7 +34,7 @@ public class SpawnApi {
 		return (EntityCreature) entity;
 	}
 
-	public static boolean spawnEntityLiving(World world, EntityCreature entity, BlockPos pos, int spawnRadius) {
+	public static boolean spawnEntityCreature(World world, EntityCreature entity, BlockPos pos, int spawnRadius) {
 		double x = pos.getX() + 0.5D;
 		double y = pos.getY();
 		double z = pos.getZ() + 0.5D;
@@ -89,7 +91,6 @@ public class SpawnApi {
 		BlockPos scanDown = new BlockPos(posIn);
 
 		for(int i = 0; i < radius; i++){
-
 			scanUp = scanUp.up();
 
 			if (setAndCheckSpawnPosition(entity, scanUp)) {
@@ -101,7 +102,6 @@ public class SpawnApi {
 			if (setAndCheckSpawnPosition(entity, scanDown)) {
 				return true;
 			}
-
 		}
 
 		return false;
@@ -109,8 +109,8 @@ public class SpawnApi {
 
 	private static boolean setAndCheckSpawnPosition(EntityCreature entity, BlockPos posIn) {
 		entity.setPosition(posIn.getX() + 0.5, posIn.getY(), posIn.getZ() + 0.5);
-		return entity.isNotColliding();
+		IBlockState state = entity.world.getBlockState(posIn.down());
+		return state.canEntitySpawn(entity) && state.isOpaqueCube() && entity.isNotColliding();
 	}
-
 
 }

@@ -1,13 +1,13 @@
 package net.torocraft.torotraits.traits.logic;
 
 import java.util.List;
+import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.torocraft.torotraits.traits.TraitHandler;
 import net.torocraft.torotraits.api.BehaviorApi;
 import net.torocraft.torotraits.api.TraitApi;
 
@@ -32,7 +32,7 @@ public class Inferno {
 		int heatDistance = 8 + (4 * level);
 		getVisiblePlayers(entity, world, heatDistance)
 				.stream()
-				.filter((EntityPlayer p) -> oneOutOf(6))
+				.filter((EntityPlayer p) -> oneOutOf(entity.getRNG(), 6))
 				.forEach((EntityPlayer p) -> roast(p, level));
 	}
 
@@ -40,8 +40,8 @@ public class Inferno {
 		entity.setFire(2 * level);
 	}
 
-	private static boolean oneOutOf(int chance) {
-		return TraitHandler.rand.nextInt(chance) == 0;
+	private static boolean oneOutOf(Random rand, int chance) {
+		return rand.nextInt(chance) == 0;
 	}
 
 	private static List<EntityPlayer> getVisiblePlayers(EntityCreature entity, World world, int distance) {

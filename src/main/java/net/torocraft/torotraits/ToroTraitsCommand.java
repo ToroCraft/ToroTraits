@@ -85,7 +85,7 @@ public class ToroTraitsCommand extends CommandBase {
 
 		Trait trait = new Trait(traitType, i(args[3]));
 		TraitApi.applyTrait(entity, trait);
-		SpawnApi.spawnEntityLiving(world, entity, player.getPosition(), 0);
+		SpawnApi.spawnEntityCreature(world, entity, player.getPosition(), 10);
 	}
 
 	private int i(String s) {
