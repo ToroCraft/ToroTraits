@@ -1,5 +1,6 @@
 package net.torocraft.torotraits;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -14,7 +15,7 @@ import net.torocraft.torotraits.proxy.CommonProxy;
 @Mod(modid = ToroTraits.MODID, version = ToroTraits.VERSION, name = ToroTraits.MODNAME)
 public class ToroTraits {
 
-	public static final String MODID = "skillutil";
+	public static final String MODID = "torotraits";
 	public static final String VERSION = "1.12.1-1";
 	public static final String MODNAME = "ToroTraits";
 
@@ -39,6 +40,8 @@ public class ToroTraits {
 	@Mod.Instance(MODID)
 	public static ToroTraits INSTANCE;
 
+	public static MinecraftServer SERVER;
+
 	public static SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	@SidedProxy(clientSide = "net.torocraft.torotraits.proxy.ClientProxy", serverSide = "net.torocraft.torotraits.proxy.ServerProxy")
@@ -61,6 +64,7 @@ public class ToroTraits {
 
 	@EventHandler
 	public void serverLoad(FMLServerStartingEvent e) {
+		SERVER = e.getServer();
 		e.registerServerCommand(new ToroTraitsCommand());
 	}
 

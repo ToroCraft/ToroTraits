@@ -1,6 +1,7 @@
 package net.torocraft.torotraits.traits;
 
 import java.util.function.Function;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -9,6 +10,7 @@ import net.torocraft.torotraits.api.TraitApi;
 import net.torocraft.torotraits.traits.logic.Allergy;
 import net.torocraft.torotraits.traits.logic.Archer;
 import net.torocraft.torotraits.traits.logic.Chicken;
+import net.torocraft.torotraits.traits.logic.DoubleMelee;
 import net.torocraft.torotraits.traits.logic.Fireball;
 import net.torocraft.torotraits.traits.logic.Gluttony;
 import net.torocraft.torotraits.traits.logic.Greedy;
@@ -43,9 +45,6 @@ public class TraitDistributor {
 
 	public static void onUpdate(EntityEvent event, EntityCreature entity, Trait trait) {
 		switch (trait.type) {
-		case DOUBLE_MELEE:
-			// TODO make the nemesis hit twice when attacking
-			return;
 		case FIREBALL:
 			Fireball.onUpdate(entity, trait.level);
 			return;
@@ -87,26 +86,25 @@ public class TraitDistributor {
 		}
 	}
 
-	public static void onHurt(EntityEvent eventIn, EntityCreature entity, Trait trait) {
+	public static void onHurt(EntityEvent eventIn, EntityCreature victim, Trait trait) {
 		LivingHurtEvent event = (LivingHurtEvent) eventIn;
 		switch (trait.type) {
 		case REFLECT:
-			Reflection.onHurt(entity, event.getSource(), event.getAmount(), trait);
+			Reflection.onHurt(victim, event.getSource(), event.getAmount(), trait);
 			break;
 		case GOLD_ALLERGY:
 		case STONE_ALLERGY:
 		case WOOD_ALLERGY:
-			Allergy.onHurt(event, trait);
+			Allergy.onHurt(event, victim, trait);
 		}
 	}
 
 
-	public static void onAttack(EntityEvent eventIn, EntityCreature entity, Trait trait) {
+	public static void onAttack(EntityEvent eventIn, EntityCreature attacker, Trait trait) {
 		LivingHurtEvent event = (LivingHurtEvent) eventIn;
 		switch (trait.type) {
 		case DOUBLE_MELEE:
-			// TODO wire this up
-			//Reflection.onHurt(entity, event.getSource(), event.getAmount(), trait);
+			DoubleMelee.onAttack(event, attacker, trait);
 			break;
 		}
 	}

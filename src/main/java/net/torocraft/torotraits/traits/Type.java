@@ -7,7 +7,7 @@ public enum Type {
 	/*
 	 * attacks
 	 */
-	DOUBLE_MELEE(Affect.STRENGTH, 1),
+	DOUBLE_MELEE(Affect.STRENGTH, 5),
 	ARCHER(Affect.STRENGTH, 6),
 	SUMMON(Affect.STRENGTH, 1),
 	REFLECT(Affect.STRENGTH, 1),

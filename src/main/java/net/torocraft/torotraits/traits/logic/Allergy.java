@@ -1,6 +1,7 @@
 package net.torocraft.torotraits.traits.logic;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -16,8 +17,7 @@ import net.torocraft.torotraits.traits.Type;
 public class Allergy {
 	private static final int ONE_SECOND = 20;
 
-	public static void onHurt(LivingHurtEvent event, Trait trait) {
-		EntityLiving entity = (EntityLiving) event.getEntity();
+	public static void onHurt(LivingHurtEvent event, EntityCreature entity, Trait trait) {
 		EntityLivingBase attacker = getAttacker(event);
 		int level = trait.level;
 
