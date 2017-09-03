@@ -10,11 +10,21 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class SpawnApi {
 
 	public static void spawn(World world, String mob, BlockPos pos, int spawnRadius) {
 		spawnEntityCreature(world, getEntityFromString(world, mob), pos, spawnRadius);
+	}
+
+	public static String getEntityString(Entity entityIn) {
+		EntityEntry entry = EntityRegistry.getEntry(entityIn.getClass());
+		if (entry == null || entry.getRegistryName() == null) {
+			return "";
+		}
+		return entry.getRegistryName().toString();
 	}
 
 	public static EntityCreature getEntityFromString(World world, String entityID) {
