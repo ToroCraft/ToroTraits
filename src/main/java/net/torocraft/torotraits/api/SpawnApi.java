@@ -56,7 +56,6 @@ public class SpawnApi {
 		if (spawnRadius > 1) {
 			findAndSetSuitableSpawnLocation(entity, pos, spawnRadius);
 		}
-		System.out.println("spawning at " + entity.getPosition());
 		world.spawnEntity(entity);
 		entity.playLivingSound();
 		return true;
