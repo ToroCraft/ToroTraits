@@ -36,8 +36,8 @@ public class Greedy {
 	}
 
 	private static List<EntityItem> getShiniesWithinAABB(EntityLiving entity, double x, double y, double z) {
-		return entity.world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(entity.getPosition()).grow(x, y, z),
-				item -> item.getItem().getItem().equals(Items.GOLD_INGOT) || item.getItem().getItem().equals(Items.EMERALD) || item.getItem()
+		return entity.world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(entity.getPosition()).expand(x, y, z),
+				item -> item.getEntityItem().getItem().equals(Items.GOLD_INGOT) || item.getEntityItem().getItem().equals(Items.EMERALD) || item.getEntityItem()
 						.getItem().equals(Items.DIAMOND));
 	}
 

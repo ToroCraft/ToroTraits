@@ -64,7 +64,7 @@ public class Summon {
 	}
 
 	private static AxisAlignedBB around(BlockPos pos, int radius) {
-		return new AxisAlignedBB(pos).grow(radius, radius, radius);
+		return new AxisAlignedBB(pos).expand(radius, radius, radius);
 	}
 
 }

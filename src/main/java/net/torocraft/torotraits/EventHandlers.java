@@ -86,10 +86,10 @@ public class EventHandlers {
 	}
 
 	public static EntityCreature getAttacker(LivingHurtEvent event) {
-		if (event.getSource() == null || event.getSource().getTrueSource() == null) {
+		if (event.getSource() == null || event.getSource().getSourceOfDamage() == null) {
 			return null;
 		}
-		Entity entity = event.getSource().getTrueSource();
+		Entity entity = event.getSource().getSourceOfDamage();
 		if (entity instanceof EntityCreature && hasTraits(entity)) {
 			return (EntityCreature) entity;
 		}

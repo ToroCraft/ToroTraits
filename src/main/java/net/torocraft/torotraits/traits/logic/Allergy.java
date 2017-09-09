@@ -62,7 +62,7 @@ public class Allergy {
 	}
 
 	private static EntityLivingBase getAttacker(LivingHurtEvent event) {
-		Entity attacker = event.getSource().getTrueSource();
+		Entity attacker = event.getSource().getSourceOfDamage();
 		if (attacker instanceof EntityLivingBase) {
 			return (EntityLivingBase) attacker;
 		}

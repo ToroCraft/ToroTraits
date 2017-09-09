@@ -58,15 +58,15 @@ public class Fireball {
 
 	private static void bigFireball(EntityLivingBase entity, World world, EntityLivingBase target) {
 		Vec3d vec3d = entity.getLook(1.0F);
-		double d2 = target.posX - (entity.posX + vec3d.x * 4.0D);
+		double d2 = target.posX - (entity.posX + vec3d.xCoord * 4.0D);
 		double d3 = target.getEntityBoundingBox().minY + (double) (target.height / 2.0F) - (0.5D + entity.posY + (double) (entity.height / 2.0F));
-		double d4 = target.posZ - (entity.posZ + vec3d.z * 4.0D);
+		double d4 = target.posZ - (entity.posZ + vec3d.zCoord * 4.0D);
 
 		EntityLargeFireball fireball = new EntityLargeFireball(world, entity, d2, d3, d4);
 		fireball.explosionPower = 1;
-		fireball.posX = entity.posX + vec3d.x * 4.0D;
+		fireball.posX = entity.posX + vec3d.xCoord * 4.0D;
 		fireball.posY = entity.posY + (double) (entity.height / 2.0F) + 0.5D;
-		fireball.posZ = entity.posZ + vec3d.z * 4.0D;
+		fireball.posZ = entity.posZ + vec3d.zCoord * 4.0D;
 		world.spawnEntity(fireball);
 		world.playEvent(null, 1016, new BlockPos(entity), 0);
 	}
@@ -76,7 +76,7 @@ public class Fireball {
 		int heatDistance = 8;
 
 		List<EntityPlayer> playersToCook = world
-				.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(entity.getPosition()).grow(heatDistance, heatDistance, heatDistance));
+				.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(entity.getPosition()).expand(heatDistance, heatDistance, heatDistance));
 		for (EntityPlayer player : playersToCook) {
 			if (entity.getEntitySenses().canSee(player)) {
 				player.setFire(10);

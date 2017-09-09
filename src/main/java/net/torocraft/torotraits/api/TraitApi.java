@@ -55,7 +55,7 @@ public class TraitApi {
 	}
 
 	public static AxisAlignedBB nearByBox(BlockPos position, int radius) {
-		return new AxisAlignedBB(position).grow(radius, radius, radius);
+		return new AxisAlignedBB(position).expand(radius, radius, radius);
 	}
 
 	private static EntityItem damageAndDrop(EntityCreature entity, ItemStack stack) {

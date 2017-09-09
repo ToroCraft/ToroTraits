@@ -54,7 +54,7 @@ public class Gluttony {
 	}
 
 	private static boolean isTasty(EntityItem item) {
-		return Arrays.stream(TASTY_THINGS).anyMatch(x -> x == item.getItem().getItem());
+		return Arrays.stream(TASTY_THINGS).anyMatch(x -> x == item.getEntityItem().getItem());
 	}
 
 }

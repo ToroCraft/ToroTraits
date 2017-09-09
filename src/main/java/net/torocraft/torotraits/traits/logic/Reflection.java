@@ -25,7 +25,7 @@ public class Reflection {
 	}
 
 	private static void reflectMeleeAttack(EntityCreature nemesisEntity, DamageSource source, float amount, Trait trait) {
-		Entity attacker = source.getTrueSource();
+		Entity attacker = source.getSourceOfDamage();
 
 		if (attacker == null) {
 			return;
@@ -47,7 +47,7 @@ public class Reflection {
 			return;
 		}
 
-		if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
+		if (source.getSourceOfDamage() != null && source.getSourceOfDamage() instanceof EntityLivingBase) {
 
 			int level = trait.level;
 
@@ -62,12 +62,12 @@ public class Reflection {
 			}
 
 			for (int i = 0; i < arrowCount; i++) {
-				Archer.attackWithArrow(nemesisEntity, (EntityLivingBase) source.getTrueSource(), 1);
+				Archer.attackWithArrow(nemesisEntity, (EntityLivingBase) source.getSourceOfDamage(), 1);
 			}
 		}
 
-		if (source.getImmediateSource() != null) {
-			source.getImmediateSource().setDead();
+		if (source.getEntity() != null) {
+			source.getEntity().setDead();
 		}
 	}
 }
