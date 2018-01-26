@@ -48,7 +48,7 @@ public class Potion {
 		EntityPotion entitypotion = new EntityPotion(world, entity,
 				PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
 		entitypotion.rotationPitch -= -20.0F;
-		entitypotion.setThrowableHeading(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
+		entitypotion.shoot(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
 
 		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_WITCH_THROW, entity.getSoundCategory(), 1.0F,
 				0.8F + rand.nextFloat() * 0.4F);

@@ -59,7 +59,7 @@ public class Archer {
 
 		double levelDistance = (double) MathHelper.sqrt(dX * dX + dZ * dZ);
 
-		arrow.setThrowableHeading(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
+		arrow.shoot(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
 				(float) (14 - archer.world.getDifficulty().getDifficultyId() * 4));
 
 		archer.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (Trait.rand.nextFloat() * 0.4F + 0.8F));

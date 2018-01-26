@@ -112,7 +112,7 @@ public class BehaviorApi {
 
 		double levelDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
-		pearl.setThrowableHeading(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
+		pearl.shoot(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
 				(float) (14 - world.getDifficulty().getDifficultyId() * 4));
 
 		entity.playSound(SoundEvents.ENTITY_ENDERPEARL_THROW, 1.0F, 1.0F / (world.rand.nextFloat() * 0.4F + 0.8F));

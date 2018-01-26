@@ -41,7 +41,7 @@ public class Fireball {
 	}
 
 	private static void smallFireball(EntityLivingBase entity, EntityLivingBase target) {
-		double distanceSq = entity.getDistanceSqToEntity(target);
+		double distanceSq = entity.getDistanceSq(target);
 
 		double dx = target.posX - entity.posX;
 		double dy = target.getEntityBoundingBox().minY + (double) (target.height / 2.0F) - (entity.posY + (double) (entity.height / 2.0F));
