@@ -5,7 +5,7 @@ import net.torocraft.torotraits.nbt.NbtField;
 
 public class TraitStore {
 
-	@NbtField(genericType = Trait.class)
-	public List<Trait> traits;
+  @NbtField(genericType = Trait.class)
+  public List<Trait> traits;
 
 }

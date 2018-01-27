@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD})
+@Target({ElementType.FIELD})
 public @interface NbtField {
-	Class<?> genericType() default Object.class;
+
+  Class<?> genericType() default Object.class;
 }

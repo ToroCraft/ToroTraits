@@ -15,43 +15,46 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class Potion {
-	public static void onUpdate(EntityLiving entity) {
-		World world = entity.world;
-		Random rand = entity.getRNG();
 
-		EntityLivingBase target = entity.getAttackTarget();
+  public static void onUpdate(EntityLiving entity) {
+    World world = entity.world;
+    Random rand = entity.getRNG();
 
-		if (target == null) {
-			return;
-		}
+    EntityLivingBase target = entity.getAttackTarget();
 
-		if (!entity.getEntitySenses().canSee(target)) {
-			return;
-		}
+    if (target == null) {
+      return;
+    }
 
-		double targetY = target.posY + (double) target.getEyeHeight() - 1.100000023841858D;
-		double targetX = target.posX + target.motionX - entity.posX;
-		double d2 = targetY - entity.posY;
-		double targetZ = target.posZ + target.motionZ - entity.posZ;
+    if (!entity.getEntitySenses().canSee(target)) {
+      return;
+    }
 
-		float f = MathHelper.sqrt(targetX * targetX + targetZ * targetZ);
-		PotionType potiontype = PotionTypes.HARMING;
+    double targetY = target.posY + (double) target.getEyeHeight() - 1.100000023841858D;
+    double targetX = target.posX + target.motionX - entity.posX;
+    double d2 = targetY - entity.posY;
+    double targetZ = target.posZ + target.motionZ - entity.posZ;
 
-		if (f >= 8.0F && !target.isPotionActive(MobEffects.SLOWNESS)) {
-			potiontype = PotionTypes.SLOWNESS;
-		} else if (target.getHealth() >= 8.0F && !target.isPotionActive(MobEffects.POISON)) {
-			potiontype = PotionTypes.POISON;
-		} else if (f <= 3.0F && !target.isPotionActive(MobEffects.WEAKNESS) && rand.nextFloat() < 0.25F) {
-			potiontype = PotionTypes.WEAKNESS;
-		}
+    float f = MathHelper.sqrt(targetX * targetX + targetZ * targetZ);
+    PotionType potiontype = PotionTypes.HARMING;
 
-		EntityPotion entitypotion = new EntityPotion(world, entity,
-				PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
-		entitypotion.rotationPitch -= -20.0F;
-		entitypotion.shoot(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
+    if (f >= 8.0F && !target.isPotionActive(MobEffects.SLOWNESS)) {
+      potiontype = PotionTypes.SLOWNESS;
+    } else if (target.getHealth() >= 8.0F && !target.isPotionActive(MobEffects.POISON)) {
+      potiontype = PotionTypes.POISON;
+    } else if (f <= 3.0F && !target.isPotionActive(MobEffects.WEAKNESS)
+        && rand.nextFloat() < 0.25F) {
+      potiontype = PotionTypes.WEAKNESS;
+    }
 
-		world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_WITCH_THROW, entity.getSoundCategory(), 1.0F,
-				0.8F + rand.nextFloat() * 0.4F);
-		world.spawnEntity(entitypotion);
-	}
+    EntityPotion entitypotion = new EntityPotion(world, entity,
+        PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potiontype));
+    entitypotion.rotationPitch -= -20.0F;
+    entitypotion.shoot(targetX, d2 + (double) (f * 0.2F), targetZ, 0.75F, 8.0F);
+
+    world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_WITCH_THROW,
+        entity.getSoundCategory(), 1.0F,
+        0.8F + rand.nextFloat() * 0.4F);
+    world.spawnEntity(entitypotion);
+  }
 }

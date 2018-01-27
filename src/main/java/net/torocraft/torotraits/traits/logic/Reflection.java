@@ -12,62 +12,67 @@ import net.torocraft.torotraits.traits.Trait;
 
 public class Reflection {
 
-	public static void onHurt(EntityCreature nemesisEntity, DamageSource source, float amount, Trait trait) {
-		if (nemesisEntity.isEntityInvulnerable(source)) {
-			return;
-		}
+  public static void onHurt(EntityCreature nemesisEntity, DamageSource source, float amount,
+      Trait trait) {
+    if (nemesisEntity.isEntityInvulnerable(source)) {
+      return;
+    }
 
-		if (source instanceof EntityDamageSourceIndirect) {
-			reflectArrowAtAttacker(nemesisEntity, source, trait);
-		} else {
-			reflectMeleeAttack(nemesisEntity, source, amount, trait);
-		}
-	}
+    if (source instanceof EntityDamageSourceIndirect) {
+      reflectArrowAtAttacker(nemesisEntity, source, trait);
+    } else {
+      reflectMeleeAttack(nemesisEntity, source, amount, trait);
+    }
+  }
 
-	private static void reflectMeleeAttack(EntityCreature nemesisEntity, DamageSource source, float amount, Trait trait) {
-		Entity attacker = source.getTrueSource();
+  private static void reflectMeleeAttack(EntityCreature nemesisEntity, DamageSource source,
+      float amount, Trait trait) {
+    Entity attacker = source.getTrueSource();
 
-		if (attacker == null) {
-			return;
-		}
+    if (attacker == null) {
+      return;
+    }
 
-		int level = trait.level;
+    int level = trait.level;
 
-		float reflectFactor = (float) level * 0.2f;
-		float reflectAmount = amount * reflectFactor;
+    float reflectFactor = (float) level * 0.2f;
+    float reflectAmount = amount * reflectFactor;
 
-		attacker.attackEntityFrom(DamageSource.causeMobDamage(nemesisEntity), reflectAmount);
+    attacker.attackEntityFrom(DamageSource.causeMobDamage(nemesisEntity), reflectAmount);
 
-		TargetPoint point = new TargetPoint(attacker.dimension, attacker.posX, attacker.posY, attacker.posZ, 100);
-		ToroTraits.NETWORK.sendToAllAround(new MessageReflectDamageAnimation(attacker.getEntityId()), point);
-	}
+    TargetPoint point = new TargetPoint(attacker.dimension, attacker.posX, attacker.posY,
+        attacker.posZ, 100);
+    ToroTraits.NETWORK
+        .sendToAllAround(new MessageReflectDamageAnimation(attacker.getEntityId()), point);
+  }
 
-	private static void reflectArrowAtAttacker(EntityCreature nemesisEntity, DamageSource source, Trait trait) {
-		if (!"arrow".equals(source.getDamageType())) {
-			return;
-		}
+  private static void reflectArrowAtAttacker(EntityCreature nemesisEntity, DamageSource source,
+      Trait trait) {
+    if (!"arrow".equals(source.getDamageType())) {
+      return;
+    }
 
-		if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
+    if (source.getTrueSource() != null && source.getTrueSource() instanceof EntityLivingBase) {
 
-			int level = trait.level;
+      int level = trait.level;
 
-			int arrowCount = 1;
+      int arrowCount = 1;
 
-			if (level > 8) {
-				arrowCount = 4;
-			} else if (level > 6) {
-				arrowCount = 3;
-			} else if (level > 4) {
-				arrowCount = 2;
-			}
+      if (level > 8) {
+        arrowCount = 4;
+      } else if (level > 6) {
+        arrowCount = 3;
+      } else if (level > 4) {
+        arrowCount = 2;
+      }
 
-			for (int i = 0; i < arrowCount; i++) {
-				Archer.attackWithArrow(nemesisEntity, (EntityLivingBase) source.getTrueSource(), 1);
-			}
-		}
+      for (int i = 0; i < arrowCount; i++) {
+        Archer.attackWithArrow(nemesisEntity, (EntityLivingBase) source.getTrueSource(), 1);
+      }
+    }
 
-		if (source.getImmediateSource() != null) {
-			source.getImmediateSource().setDead();
-		}
-	}
+    if (source.getImmediateSource() != null) {
+      source.getImmediateSource().setDead();
+    }
+  }
 }

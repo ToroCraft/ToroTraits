@@ -7,24 +7,24 @@ import net.torocraft.torotraits.api.BehaviorApi;
 
 public class Teleport {
 
-	public static void onUpdate(EntityLiving entity) {
-		World world = entity.world;
+  public static void onUpdate(EntityLiving entity) {
+    World world = entity.world;
 
-		if (world.getTotalWorldTime() % 40 != 0) {
-			return;
-		}
+    if (world.getTotalWorldTime() % 40 != 0) {
+      return;
+    }
 
-		EntityLivingBase target = entity.getAttackTarget();
+    EntityLivingBase target = entity.getAttackTarget();
 
-		if (target == null) {
-			return;
-		}
+    if (target == null) {
+      return;
+    }
 
-		if (!entity.getEntitySenses().canSee(target)) {
-			return;
-		}
+    if (!entity.getEntitySenses().canSee(target)) {
+      return;
+    }
 
-		BehaviorApi.throwPearl(entity, target);
-	}
+    BehaviorApi.throwPearl(entity, target);
+  }
 
 }

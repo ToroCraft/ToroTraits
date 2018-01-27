@@ -5,7 +5,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -15,111 +14,116 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class SpawnApi {
 
-	public static void spawn(World world, String mob, BlockPos pos, int spawnRadius) {
-		spawnEntityCreature(world, getEntityFromString(world, mob), pos, spawnRadius);
-	}
+  public static void spawn(World world, String mob, BlockPos pos, int spawnRadius) {
+    spawnEntityCreature(world, getEntityFromString(world, mob), pos, spawnRadius);
+  }
 
-	public static String getEntityString(Entity entityIn) {
-		EntityEntry entry = EntityRegistry.getEntry(entityIn.getClass());
-		if (entry == null || entry.getRegistryName() == null) {
-			return "";
-		}
-		return entry.getRegistryName().toString();
-	}
+  public static String getEntityString(Entity entityIn) {
+    EntityEntry entry = EntityRegistry.getEntry(entityIn.getClass());
+    if (entry == null || entry.getRegistryName() == null) {
+      return "";
+    }
+    return entry.getRegistryName().toString();
+  }
 
-	public static EntityCreature getEntityFromString(World world, String entityID) {
-		String[] parts = entityID.split(":");
-		String domain, entityName;
-		if (parts.length == 2) {
-			domain = parts[0];
-			entityName = parts[1];
-		} else {
-			domain = "minecraft";
-			entityName = entityID;
-		}
-		Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(domain, entityName), world);
-		if (!(entity instanceof EntityCreature)) {
-			return null;
-		}
-		return (EntityCreature) entity;
-	}
+  public static EntityCreature getEntityFromString(World world, String entityID) {
+    String[] parts = entityID.split(":");
+    String domain, entityName;
+    if (parts.length == 2) {
+      domain = parts[0];
+      entityName = parts[1];
+    } else {
+      domain = "minecraft";
+      entityName = entityID;
+    }
+    Entity entity = EntityList
+        .createEntityByIDFromName(new ResourceLocation(domain, entityName), world);
+    if (!(entity instanceof EntityCreature)) {
+      return null;
+    }
+    return (EntityCreature) entity;
+  }
 
-	public static boolean spawnEntityCreature(World world, EntityCreature entity, BlockPos pos, int spawnRadius) {
-		double x = pos.getX() + 0.5D;
-		double y = pos.getY();
-		double z = pos.getZ() + 0.5D;
-		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
-		entity.rotationYawHead = entity.rotationYaw;
-		entity.renderYawOffset = entity.rotationYaw;
-		entity.enablePersistence();
-		entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-		if (spawnRadius > 1) {
-			findAndSetSuitableSpawnLocation(entity, pos, spawnRadius);
-		}
-		world.spawnEntity(entity);
-		entity.playLivingSound();
-		return true;
-	}
+  public static boolean spawnEntityCreature(World world, EntityCreature entity, BlockPos pos,
+      int spawnRadius) {
+    double x = pos.getX() + 0.5D;
+    double y = pos.getY();
+    double z = pos.getZ() + 0.5D;
+    entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F),
+        0.0F);
+    entity.rotationYawHead = entity.rotationYaw;
+    entity.renderYawOffset = entity.rotationYaw;
+    entity.enablePersistence();
+    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    if (spawnRadius > 1) {
+      findAndSetSuitableSpawnLocation(entity, pos, spawnRadius);
+    }
+    world.spawnEntity(entity);
+    entity.playLivingSound();
+    return true;
+  }
 
-	/**
-	 * find the closest suitable spawn location to the given position within the provided radius and set it to the entity.
-	 *
-	 * @return false if no location was found
-	 */
-	public static boolean findAndSetSuitableSpawnLocation(EntityCreature entity, BlockPos around, int spawnRadius) {
-		Random rand = entity.getRNG();
+  /**
+   * find the closest suitable spawn location to the given position within the provided radius and
+   * set it to the entity.
+   *
+   * @return false if no location was found
+   */
+  public static boolean findAndSetSuitableSpawnLocation(EntityCreature entity, BlockPos around,
+      int spawnRadius) {
+    Random rand = entity.getRNG();
 
-		if (spawnRadius < 1) {
-			return false;
-		}
+    if (spawnRadius < 1) {
+      return false;
+    }
 
-		int degrees, distance, x, z;
+    int degrees, distance, x, z;
 
-		for (int attempt = 0; attempt < 10; attempt++) {
-			distance = rand.nextInt(spawnRadius);
-			degrees = rand.nextInt(360);
-			x = distance * (int) Math.round(Math.cos(Math.toRadians(degrees)));
-			z = distance * (int) Math.round(Math.sin(Math.toRadians(degrees)));
-			if(verticalScan(entity, spawnRadius, around.add(x, 0, z))){
-				return true;
-			}
-		}
+    for (int attempt = 0; attempt < 10; attempt++) {
+      distance = rand.nextInt(spawnRadius);
+      degrees = rand.nextInt(360);
+      x = distance * (int) Math.round(Math.cos(Math.toRadians(degrees)));
+      z = distance * (int) Math.round(Math.sin(Math.toRadians(degrees)));
+      if (verticalScan(entity, spawnRadius, around.add(x, 0, z))) {
+        return true;
+      }
+    }
 
-		entity.setPosition(around.getX() + 0.5, around.getY(), around.getZ() + 0.5);
+    entity.setPosition(around.getX() + 0.5, around.getY(), around.getZ() + 0.5);
 
-		return false;
-	}
+    return false;
+  }
 
-	private static boolean verticalScan(EntityCreature entity, int radius, BlockPos posIn) {
+  private static boolean verticalScan(EntityCreature entity, int radius, BlockPos posIn) {
 
-		if (setAndCheckSpawnPosition(entity, posIn)) {
-			return true;
-		}
+    if (setAndCheckSpawnPosition(entity, posIn)) {
+      return true;
+    }
 
-		BlockPos scanUp = new BlockPos(posIn);
-		BlockPos scanDown = new BlockPos(posIn);
+    BlockPos scanUp = new BlockPos(posIn);
+    BlockPos scanDown = new BlockPos(posIn);
 
-		for(int i = 0; i < radius; i++){
-			scanUp = scanUp.up();
+    for (int i = 0; i < radius; i++) {
+      scanUp = scanUp.up();
 
-			if (setAndCheckSpawnPosition(entity, scanUp)) {
-				return true;
-			}
+      if (setAndCheckSpawnPosition(entity, scanUp)) {
+        return true;
+      }
 
-			scanDown = scanDown.down();
+      scanDown = scanDown.down();
 
-			if (setAndCheckSpawnPosition(entity, scanDown)) {
-				return true;
-			}
-		}
+      if (setAndCheckSpawnPosition(entity, scanDown)) {
+        return true;
+      }
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	private static boolean setAndCheckSpawnPosition(EntityCreature entity, BlockPos posIn) {
-		entity.setPosition(posIn.getX() + 0.5, posIn.getY(), posIn.getZ() + 0.5);
-		IBlockState state = entity.world.getBlockState(posIn.down());
-		return state.canEntitySpawn(entity) && state.isOpaqueCube() && entity.isNotColliding();
-	}
+  private static boolean setAndCheckSpawnPosition(EntityCreature entity, BlockPos posIn) {
+    entity.setPosition(posIn.getX() + 0.5, posIn.getY(), posIn.getZ() + 0.5);
+    IBlockState state = entity.world.getBlockState(posIn.down());
+    return state.canEntitySpawn(entity) && state.isOpaqueCube() && entity.isNotColliding();
+  }
 
 }

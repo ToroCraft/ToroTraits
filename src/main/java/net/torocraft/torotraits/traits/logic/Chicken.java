@@ -8,15 +8,19 @@ import net.torocraft.torotraits.api.TraitApi;
 
 public class Chicken {
 
-	public static void onUpdate(EntityLiving entity, int level) {
-		if (chickensNearby(entity)) {
-			entity.setAttackTarget(null);
-			BehaviorApi.moveToBlock(entity, BehaviorApi.findPanicDestination((EntityCreature) entity, level), 2.0D);
-		}
-	}
+  public static void onUpdate(EntityLiving entity, int level) {
+    if (chickensNearby(entity)) {
+      entity.setAttackTarget(null);
+      BehaviorApi
+          .moveToBlock(entity, BehaviorApi.findPanicDestination((EntityCreature) entity, level),
+              2.0D);
+    }
+  }
 
-	private static boolean chickensNearby(EntityLiving entity) {
-		return entity.world.getEntitiesWithinAABB(EntityChicken.class, TraitApi.nearByBox(entity.getPosition(), 5)).size() > 0;
-	}
+  private static boolean chickensNearby(EntityLiving entity) {
+    return entity.world
+        .getEntitiesWithinAABB(EntityChicken.class, TraitApi.nearByBox(entity.getPosition(), 5))
+        .size() > 0;
+  }
 
 }

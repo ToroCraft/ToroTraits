@@ -5,21 +5,21 @@ import net.torocraft.torotraits.nbt.NbtField;
 
 public class Trait {
 
-	public static Random rand = new Random();
+  public static Random rand = new Random();
 
-	@NbtField
-	public Type type;
+  @NbtField
+  public Type type;
 
-	@NbtField
-	public int level;
+  @NbtField
+  public int level;
 
-	public Trait() {
+  public Trait() {
 
-	}
+  }
 
-	public Trait(Type type, int level) {
-		this.type = type;
-		this.level = level;
-	}
+  public Trait(Type type, int level) {
+    this.type = type;
+    this.level = level;
+  }
 
 }

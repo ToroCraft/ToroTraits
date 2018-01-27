@@ -20,103 +20,110 @@ import net.torocraft.torotraits.ToroTraits;
 
 public class BehaviorApi {
 
-	public static void setFollowSpeed(EntityCreature bodyGuard, double followSpeed) {
-		EntityAIMoveTowardsRestriction ai = null;
-		for (EntityAITaskEntry entry : bodyGuard.tasks.taskEntries) {
-			if (entry.action instanceof EntityAIMoveTowardsRestriction) {
-				ai = (EntityAIMoveTowardsRestriction) entry.action;
-			}
-		}
-		if (ai == null) {
-			System.out.println("guard ai not found");
-			return;
-		}
-		//not sure field_75433_e is the correct name for EntityAIMoveTowardsRestriction.movementSpeed
-		ObfuscationReflectionHelper.setPrivateValue(EntityAIMoveTowardsRestriction.class, ai, followSpeed, "field_75433_e", "movementSpeed");
-	}
+  public static void setFollowSpeed(EntityCreature bodyGuard, double followSpeed) {
+    EntityAIMoveTowardsRestriction ai = null;
+    for (EntityAITaskEntry entry : bodyGuard.tasks.taskEntries) {
+      if (entry.action instanceof EntityAIMoveTowardsRestriction) {
+        ai = (EntityAIMoveTowardsRestriction) entry.action;
+      }
+    }
+    if (ai == null) {
+      System.out.println("guard ai not found");
+      return;
+    }
+    //not sure field_75433_e is the correct name for EntityAIMoveTowardsRestriction.movementSpeed
+    ObfuscationReflectionHelper
+        .setPrivateValue(EntityAIMoveTowardsRestriction.class, ai, followSpeed, "field_75433_e",
+            "movementSpeed");
+  }
 
-	public static boolean moveToBlock(EntityLiving entity, BlockPos randBlock, double speed) {
-		return entity.getNavigator().tryMoveToXYZ(randBlock.getX(), randBlock.getY(), randBlock.getZ(), speed);
-	}
+  public static boolean moveToBlock(EntityLiving entity, BlockPos randBlock, double speed) {
+    return entity.getNavigator()
+        .tryMoveToXYZ(randBlock.getX(), randBlock.getY(), randBlock.getZ(), speed);
+  }
 
-	public static BlockPos findPanicDestination(EntityCreature entity, int level) {
-		return new BlockPos(RandomPositionGenerator.findRandomTarget(entity, 5 + (2 * level), 4));
-	}
+  public static BlockPos findPanicDestination(EntityCreature entity, int level) {
+    return new BlockPos(RandomPositionGenerator.findRandomTarget(entity, 5 + (2 * level), 4));
+  }
 
-	public static boolean stealAndWorshipItem(EntityLiving entity, List<EntityItem> desiredItems, int level) {
-		if (desiredItems.size() > 0) {
+  public static boolean stealAndWorshipItem(EntityLiving entity, List<EntityItem> desiredItems,
+      int level) {
+    if (desiredItems.size() > 0) {
 
-			// TODO store the item to NBT, move this call to start worship since the replacement is called in stopWorship
-			//entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, desiredItems.get(0).getItem());
+      // TODO store the item to NBT, move this call to start worship since the replacement is called in stopWorship
+      //entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, desiredItems.get(0).getItem());
 
-			BehaviorApi.startWorshiping(entity,  3 + (2 * level));
-			for (EntityItem item : desiredItems) {
-				entity.world.removeEntity(item);
-			}
-			return true;
-		}
-		return false;
-	}
+      BehaviorApi.startWorshiping(entity, 3 + (2 * level));
+      for (EntityItem item : desiredItems) {
+        entity.world.removeEntity(item);
+      }
+      return true;
+    }
+    return false;
+  }
 
-	private static void startWorshiping(EntityLiving entity, int count) {
-		entity.getTags().add(ToroTraits.TAG_WORSHIPING);
-		entity.getEntityData().setTag(ToroTraits.NBT_WORSHIP_COOLDOWN, new NBTTagInt(count));
-		cancelAllAITasks(entity);
-	}
+  private static void startWorshiping(EntityLiving entity, int count) {
+    entity.getTags().add(ToroTraits.TAG_WORSHIPING);
+    entity.getEntityData().setTag(ToroTraits.NBT_WORSHIP_COOLDOWN, new NBTTagInt(count));
+    cancelAllAITasks(entity);
+  }
 
-	public static void stopWorshiping(EntityLiving entity) {
-		entity.getEntityData().removeTag(ToroTraits.NBT_WORSHIP_COOLDOWN);
-		entity.getTags().remove(ToroTraits.TAG_WORSHIPING);
+  public static void stopWorshiping(EntityLiving entity) {
+    entity.getEntityData().removeTag(ToroTraits.NBT_WORSHIP_COOLDOWN);
+    entity.getTags().remove(ToroTraits.TAG_WORSHIPING);
 
-		// TODO the item needs to be cached on the entity then restored here
-		//entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, nemesis.getHandInventory().get(0));
+    // TODO the item needs to be cached on the entity then restored here
+    //entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, nemesis.getHandInventory().get(0));
 
-		resumeAITasks(entity);
-	}
+    resumeAITasks(entity);
+  }
 
-	public static boolean isWorshiping(EntityLiving entity) {
-		return entity.getTags().contains(ToroTraits.TAG_WORSHIPING) && entity.getEntityData().hasKey(ToroTraits.NBT_WORSHIP_COOLDOWN);
-	}
+  public static boolean isWorshiping(EntityLiving entity) {
+    return entity.getTags().contains(ToroTraits.TAG_WORSHIPING) && entity.getEntityData()
+        .hasKey(ToroTraits.NBT_WORSHIP_COOLDOWN);
+  }
 
-	public static void moveToItem(EntityLiving entity, EntityItem item) {
-		EntityCreature mob = (EntityCreature)entity;
-		mob.getNavigator().tryMoveToXYZ(item.getPosition().getX() + 0.5D, item.getPosition().getY() + 1, item.getPosition().getZ() + 0.5D, 2.0);
-	}
+  public static void moveToItem(EntityLiving entity, EntityItem item) {
+    EntityCreature mob = (EntityCreature) entity;
+    mob.getNavigator().tryMoveToXYZ(item.getPosition().getX() + 0.5D, item.getPosition().getY() + 1,
+        item.getPosition().getZ() + 0.5D, 2.0);
+  }
 
-	public static void cancelAllAITasks(EntityLiving entity) {
-		//TODO replace this by inserting an overriding AI task so that the entity is not "frozen" in place when this is activated
-		entity.setNoAI(true);
-	}
+  public static void cancelAllAITasks(EntityLiving entity) {
+    //TODO replace this by inserting an overriding AI task so that the entity is not "frozen" in place when this is activated
+    entity.setNoAI(true);
+  }
 
-	public static void resumeAITasks(EntityLiving entity) {
-		entity.setNoAI(false);
-	}
+  public static void resumeAITasks(EntityLiving entity) {
+    entity.setNoAI(false);
+  }
 
-	public static boolean canSee(EntityCreature spectator, Entity subject) {
-		return spectator.getEntitySenses().canSee(subject);
-	}
+  public static boolean canSee(EntityCreature spectator, Entity subject) {
+    return spectator.getEntitySenses().canSee(subject);
+  }
 
-	public static void throwPearl(EntityLiving entity, EntityLivingBase target) {
-		World world = entity.getEntityWorld();
-		EntityEnderPearl pearl = new EntityEnderPearl(world, entity);
+  public static void throwPearl(EntityLiving entity, EntityLivingBase target) {
+    World world = entity.getEntityWorld();
+    EntityEnderPearl pearl = new EntityEnderPearl(world, entity);
 
-		double dX = target.posX - entity.posX;
-		double dY = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - pearl.posY;
-		double dZ = target.posZ - entity.posZ;
+    double dX = target.posX - entity.posX;
+    double dY = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - pearl.posY;
+    double dZ = target.posZ - entity.posZ;
 
-		double distanceSq = dX * dX + dY * dY + dZ * dZ;
+    double distanceSq = dX * dX + dY * dY + dZ * dZ;
 
-		if (distanceSq < 20) {
-			return;
-		}
+    if (distanceSq < 20) {
+      return;
+    }
 
-		double levelDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
+    double levelDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
-		pearl.shoot(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
-				(float) (14 - world.getDifficulty().getDifficultyId() * 4));
+    pearl.shoot(dX, dY + levelDistance * 0.20000000298023224D, dZ, 1.6F,
+        (float) (14 - world.getDifficulty().getDifficultyId() * 4));
 
-		entity.playSound(SoundEvents.ENTITY_ENDERPEARL_THROW, 1.0F, 1.0F / (world.rand.nextFloat() * 0.4F + 0.8F));
+    entity.playSound(SoundEvents.ENTITY_ENDERPEARL_THROW, 1.0F,
+        1.0F / (world.rand.nextFloat() * 0.4F + 0.8F));
 
-		world.spawnEntity(pearl);
-	}
+    world.spawnEntity(pearl);
+  }
 }

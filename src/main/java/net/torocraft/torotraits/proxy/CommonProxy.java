@@ -11,36 +11,37 @@ import net.torocraft.torotraits.network.MessageWorshipAnimation;
 
 public class CommonProxy {
 
-	public void preInit(FMLPreInitializationEvent e) {
+  public void preInit(FMLPreInitializationEvent e) {
 
-	}
+  }
 
-	public void init(FMLInitializationEvent e) {
-		initPackets();
-	}
+  public void init(FMLInitializationEvent e) {
+    initPackets();
+  }
 
-	public void postInit(FMLPostInitializationEvent e) {
+  public void postInit(FMLPostInitializationEvent e) {
 
-	}
+  }
 
-	private void initPackets() {
-		int packetId = 0;
-		MessageHealAnimation.init(packetId++);
-		MessageReflectDamageAnimation.init(packetId++);
-		MessageWorshipAnimation.init(packetId++);
-	}
+  private void initPackets() {
+    int packetId = 0;
+    MessageHealAnimation.init(packetId++);
+    MessageReflectDamageAnimation.init(packetId++);
+    MessageWorshipAnimation.init(packetId++);
+  }
 
-	public void openGui(int modGuiId) {
+  public void openGui(int modGuiId) {
 
-	}
+  }
 
-	public EntityPlayer getPlayer() {
-		return null;
-	}
+  public EntityPlayer getPlayer() {
+    return null;
+  }
 
-	public void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed,
-			double zSpeed, int... parameters) {
+  public void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord,
+      double zCoord, double xSpeed, double ySpeed,
+      double zSpeed, int... parameters) {
 
-	}
+  }
 
 }
