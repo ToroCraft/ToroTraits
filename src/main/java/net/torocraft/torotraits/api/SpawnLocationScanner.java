@@ -13,8 +13,9 @@ public class SpawnLocationScanner {
   private final World world;
   private final int worldHeight;
   private final Random rand;
+  private final double halfWidth;
+  private final double height;
 
-  private AxisAlignedBB box;
   private BlockPos pos;
   private BlockPos up;
   private BlockPos down;
@@ -23,7 +24,8 @@ public class SpawnLocationScanner {
     this.world = world;
     this.pos = startPos;
     worldHeight = world.getActualHeight();
-    box = entity.getEntityBoundingBox();
+    halfWidth = entity.width / 2.0F;
+    height = entity.height;
     rand = new Random();
   }
 
@@ -85,7 +87,6 @@ public class SpawnLocationScanner {
   }
 
   private boolean check() {
-    box = box.offset(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
     return isOnOpaqueBlock() && isNotColliding();
   }
 
@@ -95,7 +96,16 @@ public class SpawnLocationScanner {
   }
 
   private boolean isNotColliding() {
+    AxisAlignedBB box = getBoundingBox();
     return !world.containsAnyLiquid(box) && world.getCollisionBoxes(null, box).isEmpty();
+  }
+
+  public AxisAlignedBB getBoundingBox() {
+    double x = pos.getX() + 0.5;
+    double y = pos.getY();
+    double z = pos.getZ() + 0.5;
+    return new AxisAlignedBB(x - halfWidth, y, z - halfWidth, x + halfWidth, y + height,
+        z + halfWidth);
   }
 
 }
