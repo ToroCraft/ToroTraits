@@ -1,7 +1,5 @@
 package net.torocraft.torotraits.api;
 
-import java.util.Random;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -44,7 +42,7 @@ public class SpawnApi {
     return (EntityCreature) entity;
   }
 
-  public static boolean spawnEntityCreature(World world, EntityCreature entity, BlockPos pos,
+  public static void spawnEntityCreature(World world, EntityCreature entity, BlockPos pos,
       int spawnRadius) {
     double x = pos.getX() + 0.5D;
     double y = pos.getY();
@@ -60,7 +58,6 @@ public class SpawnApi {
     }
     world.spawnEntity(entity);
     entity.playLivingSound();
-    return true;
   }
 
   /**
@@ -71,59 +68,17 @@ public class SpawnApi {
    */
   public static boolean findAndSetSuitableSpawnLocation(EntityCreature entity, BlockPos around,
       int spawnRadius) {
-    Random rand = entity.getRNG();
 
-    if (spawnRadius < 1) {
+    SpawnLocationScanner scanner = new SpawnLocationScanner(entity.world, entity, around);
+    BlockPos spawnable = scanner.areaScan(spawnRadius, spawnRadius, 10);
+
+    if (spawnable == null) {
+      entity.setPosition(around.getX() + 0.5, around.getY(), around.getZ() + 0.5);
       return false;
-    }
-
-    int degrees, distance, x, z;
-
-    for (int attempt = 0; attempt < 10; attempt++) {
-      distance = rand.nextInt(spawnRadius);
-      degrees = rand.nextInt(360);
-      x = distance * (int) Math.round(Math.cos(Math.toRadians(degrees)));
-      z = distance * (int) Math.round(Math.sin(Math.toRadians(degrees)));
-      if (verticalScan(entity, spawnRadius, around.add(x, 0, z))) {
-        return true;
-      }
-    }
-
-    entity.setPosition(around.getX() + 0.5, around.getY(), around.getZ() + 0.5);
-
-    return false;
-  }
-
-  private static boolean verticalScan(EntityCreature entity, int radius, BlockPos posIn) {
-
-    if (setAndCheckSpawnPosition(entity, posIn)) {
+    } else {
+      entity.setPosition(spawnable.getX() + 0.5, spawnable.getY(), spawnable.getZ() + 0.5);
       return true;
     }
-
-    BlockPos scanUp = new BlockPos(posIn);
-    BlockPos scanDown = new BlockPos(posIn);
-
-    for (int i = 0; i < radius; i++) {
-      scanUp = scanUp.up();
-
-      if (setAndCheckSpawnPosition(entity, scanUp)) {
-        return true;
-      }
-
-      scanDown = scanDown.down();
-
-      if (setAndCheckSpawnPosition(entity, scanDown)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private static boolean setAndCheckSpawnPosition(EntityCreature entity, BlockPos posIn) {
-    entity.setPosition(posIn.getX() + 0.5, posIn.getY(), posIn.getZ() + 0.5);
-    IBlockState state = entity.world.getBlockState(posIn.down());
-    return state.canEntitySpawn(entity) && state.isOpaqueCube() && entity.isNotColliding();
   }
 
 }
